@@ -82,7 +82,7 @@ function Issue(id,
   // Constructor
   this.id = id;
   this.type = type;
-  this.parentId = parentId.substr(1);
+  this.parentId = parentId.substr(1);// Remove "#" from beginning of string
   this.status = status;
   this.priority = priority;
   this.subject = subject;
@@ -94,7 +94,7 @@ function Issue(id,
   this.percentDone = percentDone;
   this.created = created;
   this.closed = closed;
-  this.rawRelatedIssues = rawRelatedIssues;
+  this.rawRelatedIssues = rawRelatedIssues;// Maybe parse for relationships at a future time
 
   this.children = [];
 
@@ -144,7 +144,7 @@ function Issue(id,
   return this;
 }
 
-// Source Issues Sheet Colums
+// Source Issues Sheet Columns
 Issue.COLUMNS = {
   id: 0,
   tracker: 2,
