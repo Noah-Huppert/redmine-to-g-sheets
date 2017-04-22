@@ -9,18 +9,18 @@ var RECURSION_MAX_DEFAULT = 20;
  * @param recursionMax Max recursion depth
  * @returns {{}} Deep copy of obj
  */
-function deepCopy(obj, recursionCounter, recursionMax) {
+function deepCopy(obj, recursionMax, recursionCounter) {
   // Recursion
   if (recursionCounter === undefined) {
     recursionCounter = 0;
   } else {
-    recursionCounter += 1;
+    recursionCounter++;
   }
 
   if (recursionMax === undefined) {
     recursionMax = RECURSION_MAX_DEFAULT;
   } else if (recursionCounter > recursionMax) {
-    throw Error("Reached max recursion depth: " + recursionMax);
+    throw new Error("Reached max recursion depth: " + recursionMax);
   }
 
   // Copy
@@ -29,9 +29,9 @@ function deepCopy(obj, recursionCounter, recursionMax) {
   // For each key
   for (var key in obj) {
     // If object
-    if (typeof obj[key] === Object) {
+    if (typeof obj[key] === "object") {
       // Recursion
-      newCopy[key] = deepCopy(obj[key], recursionCounter, recursionMax);
+      newCopy[key] = deepCopy(obj[key], recursionMax, recursionCounter);
     } else {// If regular value
       // Copy normally
       newCopy[key] = obj[key];

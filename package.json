@@ -4,7 +4,7 @@
   "description": "Google Sheets Script for taking a Redmine CSV issue export and displaying it on a Google Sheet.",
   "main": "script-v2.js",
   "scripts": {
-    "test": "karma start my.conf.js"
+    "test": "karma start test.conf.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,9 @@
   "author": "Noah Huppert <developer.noah@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "karma": "^1.6.0"
+    "jasmine": "^2.5.3",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4"
   }
 }
