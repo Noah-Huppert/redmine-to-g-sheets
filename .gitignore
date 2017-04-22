@@ -1,3 +1,7 @@
 # Jetbrains
 .idea
 *.iml
+
+# NPM
+*.log
+node_modules

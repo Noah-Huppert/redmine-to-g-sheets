@@ -18,5 +18,8 @@
     "csv"
   ],
   "author": "Noah Huppert <developer.noah@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "karma": "^1.6.0"
+  }
 }
