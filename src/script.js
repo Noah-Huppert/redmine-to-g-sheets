@@ -257,6 +257,7 @@ Issue.compareIssues = function (a, b) {
  * @constructor
  */
 function IssueTree(issues) {
+  this.issues = issues;
   this.parentIssues = {};
 
   // Place issues and subissues
@@ -308,6 +309,25 @@ function IssueTree(issues) {
 
   this.sortedParentIssues.sort(Issue.compareIssues);
 
+  // Row map for styling later usage
+  this.issueToRowMap = {};
+
+  // For each parent issue
+  var row = 2;// Start on 2 b/c row 1 is column headers
+  for (var pId in this.parentIssues) {
+    var parent = this.sortedParentIssues[pId];
+    this.issueToRowMap[parent.id] = row;
+
+    // For each child issue
+    for (var cId in parent.children) {
+      row++;
+      var child = parent.children[cId];
+      this.issueToRowMap[child.id] = row;
+    }
+
+    row++;
+  }
+
   /**
    * Convert IssueTree into Row Array to be returned from spreadsheet function
    * @returns {Array}
@@ -339,6 +359,39 @@ function IssueTree(issues) {
     return out;
   };
 
+  /**
+   * Style spreadsheet rows based on parent and child issues
+   */
+  this.styleRows = function() {
+    var sheet = SpreadsheetApp.getActiveSheet();
+
+    // For each issue
+    for (var id in this.issueToRowMap) {
+      var issue = this.issues[id];
+      var row = this.issueToRowMap[id];
+
+      var range = sheet.getRange(row);
+
+      // Set background
+      if (issue.hasParent() === false) {// If parent issue
+        // Gray background
+        range.setBackground("#efefef");
+      } else {// If child issue
+        // White background
+        range.setBackground("#ffffff");
+      }
+
+      // Set border
+      if (issue.hasParent() === false) {// If parent issue
+        // Border top
+        range.setBorder(true, false, false, false, false, false);
+      } else {// If child issue
+        // No border
+        range.setBorder(false, false, false, false, false, false);
+      }
+    }
+  };
+
   return this;
 }
 
@@ -351,6 +404,6 @@ function taskList() {
 
   var issues = Issue.fromRows(sourceIssuesData);
   var issueTree = IssueTree(issues);
-
+  issueTree.styleRows();
   return issueTree.toRowArray();
 }
