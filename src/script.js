@@ -376,15 +376,28 @@ function IssueTree(issues) {
   /**
    * Style spreadsheet rows based on parent and child issues
    */
-  this.styleRows = function() {
+  this.styleRows = function () {
     var sheet = SpreadsheetApp.getActiveSheet();
+
+    // Header row
+    var hRange = sheet.getRange("1:1");
+    hRange.setBackground("#cccccc");
+    hRange.setFontWeight("bold");
+    hRange.setHorizontalAlignment("center");
+    hRange.setVerticalAlignment("middle");
+    hRange.setWrap(true);
 
     // For each issue
     for (var id in this.issueToRowMap) {
       var issue = this.issues[id];
       var row = this.issueToRowMap[id];
 
-      var range = sheet.getRange(row);
+      var range = sheet.getRange(row + ":" + row);
+
+      // Center and wrap
+      range.setHorizontalAlignment("center");
+      range.setVerticalAlignment("middle");
+      range.setWrap(true);
 
       // Set background
       if (issue.hasParent() === false) {// If parent issue
@@ -410,14 +423,46 @@ function IssueTree(issues) {
 }
 
 // Configuration parameters
-var sourceIssuesSheetId = "1RJmN9WXBP-T5djhRad-Xs-nIZPe-QogtMfEuTlY145I";
+function getSourceSheetId() {
+  return SpreadsheetApp.getActiveSpreadsheet().getSheets()[1].getRange("B1").getValue();
+}
 
-function taskList() {
-  var sourceIssuesSheet = SpreadsheetApp.openById(sourceIssuesSheetId);
+function getSourceIssueTree() {
+  var sourceIssuesSheet = SpreadsheetApp.openById(getSourceSheetId());
   var sourceIssuesData = sourceIssuesSheet.getDataRange().getValues();
 
   var issues = Issue.fromRows(sourceIssuesData);
   var issueTree = IssueTree(issues);
-  issueTree.styleRows();
+
+  return issueTree;
+}
+
+function taskList() {
+  var issueTree = getSourceIssueTree();
   return issueTree.toRowArray();
+}
+
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu("Redmine to G Sheets")
+    .addItem("Format", "format")
+    .addItem("Clear Formatting", "unFormat")
+    .addToUi();
+}
+
+function format() {
+  var issueTree = getSourceIssueTree();
+  try {
+    issueTree.styleRows();
+  } catch (e) {
+    SpreadsheetApp.getUi().alert("Failed to format rows: " + e);
+  }
+}
+
+function unFormat() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var mRows = sheet.getMaxRows();
+
+  var range = sheet.getRange("A1:" + mRows);
+  range.clearFormat();
 }
