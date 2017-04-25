@@ -147,7 +147,7 @@ function Issue(id,
 // Source Issues Sheet Columns
 Issue.COLUMNS = {
   id: 0,
-  tracker: 2,
+  type: 2,
   parentId: 3,
   status: 4,
   priority: 5,
@@ -186,7 +186,22 @@ Issue.fromRow = function (row) {
     args.push(row[col]);
   }
 
-  return Issue.apply(null, args);
+  return new Issue(args[0],
+    args[1],
+    args[2],
+    args[3],
+    args[4],
+    args[5],
+    args[6],
+    args[7],
+    args[8],
+    args[9],
+    args[10],
+    args[11],
+    args[12],
+    args[13],
+    args[14]
+  );
 };
 
 /**
@@ -262,9 +277,8 @@ function IssueTree(issues) {
 
   // Place issues and subissues
   // For each issue
-  for (var id in issues) {
-    var issue = issues[id];
-    Logger.info(issue.id);
+  for (var id in this.issues) {
+    var issue = this.issues[id];
 
     // If is parent and no parent issue placeholder
     if (issue.hasParent() === false && (issue.id in this.parentIssues) === false) {
