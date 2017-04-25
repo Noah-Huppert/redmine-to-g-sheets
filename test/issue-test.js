@@ -160,7 +160,73 @@ describe("Issue class", function () {
     });
   });
 
-  describe("compareIssues", function() {
-    // TODO: After commit test this
+  describe("compareIssues", function () {
+    describe("comparing startDate", function () {
+      beforeEach(function () {
+        this.greater = {startDate: new Date(2000, 8, 20)};
+        this.less = {startDate: new Date(2000, 7, 20)};
+      });
+
+      it("a startDate less than b startDate => -1", function () {
+        expect(Issue.compareIssues(this.less, this.greater)).toEqual(-1);
+      });
+
+      it("a startDate greater than b startDate => 1", function () {
+        expect(Issue.compareIssues(this.greater, this.less)).toEqual(1);
+      });
+    });
+
+    describe("equal startDate", function () {
+      beforeEach(function () {
+        this.greater = {startDate: new Date(1990, 5, 4)};
+        this.less = {startDate: new Date(1990, 5, 4)};
+      });
+
+      describe("comparing dueDate", function () {
+        beforeEach(function () {
+          this.greater.dueDate = new Date(2000, 8, 20);
+          this.less.dueDate = new Date(2000, 7, 20);
+        });
+
+        it("a dueDate less than b dueDate => -1", function () {
+          expect(Issue.compareIssues(this.less, this.greater)).toEqual(-1);
+        });
+
+        it("a dueDate greater than b dueDate => 1", function () {
+          expect(Issue.compareIssues(this.greater, this.less)).toEqual(1);
+        });
+      });
+
+      describe("Equal dueDates", function () {
+        beforeEach(function () {
+          this.greater.dueDate = new Date(1991, 5, 4);
+          this.less.dueDate = new Date(1991, 5, 4);
+
+          this.pKeys = Object.getOwnPropertyNames(Issue.PRIORITY_SORT_VALUES);// Keys of Priority sort object, for testing
+        });
+
+        describe("Comparing priority", function () {
+          beforeEach(function () {
+            this.greater.priority = this.pKeys[this.pKeys.length - 1];
+            this.less.priority = this.pKeys[0];
+          });
+
+          it("a priority less than b priority => -1", function () {
+            expect(Issue.compareIssues(this.less, this.greater)).toEqual(-1);
+          });
+
+          it("a priority greater than b priority => 1", function () {
+            expect(Issue.compareIssues(this.greater, this.less)).toEqual(1);
+          });
+        });
+
+        it("Equal priority (a === b in every comparable way) => 0", function () {
+          this.greater.priority = this.pKeys[0];
+          this.less.priority = this.pKeys[0];
+
+          expect(Issue.compareIssues(this.less, this.greater)).toEqual(0);
+        });
+      })
+    });
   });
 });
