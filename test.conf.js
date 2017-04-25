@@ -1,6 +1,11 @@
 // Karma configuration
 // Generated on Sat Apr 22 2017 16:42:31 GMT-0400 (EDT)
 
+var singleRun = false;
+if (("KARMA_SINGLE_RUN" in process.env) === true) {
+  singleRun = process.env.KARMA_SINGLE_RUN === "true";
+}
+
 module.exports = function(config) {
   config.set({
 
@@ -65,7 +70,7 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: singleRun,
 
     // Concurrency level
     // how many browser should be started simultaneous
