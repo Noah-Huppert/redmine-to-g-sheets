@@ -9,12 +9,18 @@ describe("IssueTree", function() {
       return true;
     };
 
-    this.parent1 = {id: 1, parentId: undefined, children: [], startDate: new Date(2000), hasParent: this.hasParentFalse};
-    this.parent2 = {id: 2, parentId: undefined, children: [], startDate: new Date(2001), hasParent: this.hasParentFalse};
-    this.childof1 = {id: 3, parentId: 1, children: [], startDate: new Date(1990), hasParent: this.hasParentTrue};
-    this.childof2 = {id: 4, parentId: 2, children: [], startDate: new Date(1990), hasParent: this.hasParentTrue};
-    this.otherChildOf1 = {id: 5, parentId: 1, children: [], startDate: new Date(1991), hasParent: this.hasParentTrue};
-    this.otherChildOf2 = {id: 6, parentId: 2, children: [], startDate: new Date(1991), hasParent: this.hasParentTrue};
+    this.toRowArray = function(val) {
+      return function() {
+        return ["HEADER", val];
+      }
+    };
+
+    this.parent1 = {id: 1, parentId: undefined, children: [], startDate: new Date(2000), hasParent: this.hasParentFalse, toRowArray: this.toRowArray(1)};
+    this.parent2 = {id: 2, parentId: undefined, children: [], startDate: new Date(2001), hasParent: this.hasParentFalse, toRowArray: this.toRowArray(2)};
+    this.childof1 = {id: 3, parentId: 1, children: [], startDate: new Date(1990), hasParent: this.hasParentTrue, toRowArray: this.toRowArray(3)};
+    this.childof2 = {id: 4, parentId: 2, children: [], startDate: new Date(1990), hasParent: this.hasParentTrue, toRowArray: this.toRowArray(4)};
+    this.otherChildOf1 = {id: 5, parentId: 1, children: [], startDate: new Date(1991), hasParent: this.hasParentTrue, toRowArray: this.toRowArray(5)};
+    this.otherChildOf2 = {id: 6, parentId: 2, children: [], startDate: new Date(1991), hasParent: this.hasParentTrue, toRowArray: this.toRowArray(6)};
 
     this.allIssues = {1: this.parent1, 2: this.parent2, 3: this.childof1, 4: this.childof2, 5: this.otherChildOf1, 6: this.otherChildOf2};
     this.allIssuesBackwards = {6: this.otherChildOf2, 5: this.otherChildOf1, 4: this.childof2, 3: this.childof1, 2: this.parent2, 1: this.parent1};
@@ -87,5 +93,18 @@ describe("IssueTree", function() {
       expect(it.issueToRowMap["4"]).toEqual(6);
       expect(it.issueToRowMap["6"]).toEqual(7);
     });
+  });
+
+  it("toRowArray works", function() {
+    var it = new IssueTree(this.allIssues);
+    var rows = it.toRowArray();
+
+    expect(rows[0]).toEqual("HEADER");
+    expect(rows[1]).toEqual(1);
+    expect(rows[2]).toEqual(3);
+    expect(rows[3]).toEqual(5);
+    expect(rows[4]).toEqual(2);
+    expect(rows[5]).toEqual(4);
+    expect(rows[6]).toEqual(6);
   });
 });
