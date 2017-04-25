@@ -111,6 +111,14 @@ function Issue(id,
    * @returns {Array}
    */
   this.toRowArray = function () {
+    var typeText = "!Uknown!";
+
+    if (this.type === "Task") {
+      typeText = "A";
+    } else if (this.type === "Bug") {
+      typeText = "I";
+    }
+
     return [
       [
         "#",
@@ -128,7 +136,7 @@ function Issue(id,
       [
         this.id,
         this.parentId,
-        this.type,
+        typeText,
         this.priority,
         this.status,
         this.subject,
