@@ -29,7 +29,7 @@ function deepCopy(obj, recursionMax, recursionCounter) {
   // For each key
   for (var key in obj) {
     // If object
-    if (typeof obj[key] === "object") {
+    if (typeof obj[key] === "object" && Object.getOwnPropertyNames(obj[key]).length > ((obj[key].length !== undefined) ? 1 : 0)) {
       // Recursion
       newCopy[key] = deepCopy(obj[key], recursionMax, recursionCounter);
     } else {// If regular value
@@ -328,14 +328,14 @@ function IssueTree(issues) {
 
   // For each parent issue
   var row = 2;// Start on 2 b/c row 1 is column headers
-  for (var pId in this.parentIssues) {
-    var parent = this.sortedParentIssues[pId];
+  for (var pI = 0; pI < this.sortedParentIssues.length; pI++) {
+    var parent = this.sortedParentIssues[pI];
     this.issueToRowMap[parent.id] = row;
 
     // For each child issue
-    for (var cId in parent.children) {
+    for (var cI = 0; cI < parent.children.length; cI++) {
       row++;
-      var child = parent.children[cId];
+      var child = parent.children[cI];
       this.issueToRowMap[child.id] = row;
     }
 
